@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -18,10 +20,12 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::get('/inventario', function () {
-    return Inertia::render('Inventario');
-})->middleware(['auth', 'verified'])->name('inventario');
-
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::resource('categories', CategoryController::class);
+});
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::resource('products', ProductController::class);
+});
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
